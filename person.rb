@@ -4,6 +4,7 @@
 # Author:: Robert Gnehr
 
 require 'set'
+require_relative 'pet'
 
 # Class description
 class Person
@@ -18,17 +19,32 @@ class Person
   def pet_pet(target)
     raise ArgumentError, 'Argument must be of type Pet.' unless target.is_a?(Pet)
 
+    if target.is_a?(Cat) && target.alive?
+      puts "#{target} tells #{self} to fuck off."
+      return nil
+    end
+
     target.get_petted(self)
   end
 
   def feed_pet(target)
     raise ArgumentError, 'Argument must be of type Pet.' unless target.is_a?(Pet)
 
+    if target.is_a?(Cat) && target.alive?
+      puts "#{target} tells #{self} to fuck off."
+      return nil
+    end
+
     target.get_fed(self)
   end
 
   def add_pet(pet)
     raise ArgumentError, 'Argument must be of type Pet.' unless pet.is_a?(Pet)
+
+    if pet.is_a?(Cat)
+      puts "#{pet} tells #{self} to fuck off."
+      return nil
+    end
 
     @pets << pet
     self

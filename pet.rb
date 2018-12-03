@@ -35,9 +35,13 @@ class Pet
       false
     else
       @lives -= 1
-      puts "#{self} gets attacked by #{attacker} and dies."
+      puts "#{self} gets attacked by #{attacker}."
+      if self.lives.zero?
+        puts "#{self} dies."
+      end
       true
     end
+
   end
 
   def get_fed(source)
@@ -67,7 +71,7 @@ class Pet
   def to_s
     @name.to_s
   end
-
+=begin
   def ==(other)
     return false if other.nil?
     return true if self.equal?(other)
@@ -89,4 +93,5 @@ class Pet
     return false unless self.class == other.class
     [@name, @birthday, @lives] == [other.name, other.birthday, other.lives]
   end
+=end
 end
