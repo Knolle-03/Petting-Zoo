@@ -58,6 +58,10 @@ class Cat < Pet
     end
   end
 
+  def servant?(servant)
+    @servants.include?(servant)
+  end
+
   def servants_to_s
     puts "#{self}'s servant#{@servants.length == 1 ? '' : 's'}:"
     @servants.to_a.join(', ')

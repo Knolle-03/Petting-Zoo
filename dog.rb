@@ -17,7 +17,7 @@ class Dog < Pet
     @owner = owner
     @owner.add_pet(self)
   end
-
+=begin
   def ==(other)
     return false if other.nil?
     return true if self.equal?(other)
@@ -40,4 +40,5 @@ class Dog < Pet
     return false unless self.class == other.class
     [@name, @birthday, @lives, @owner] == [other.name, other.birthday, other.lives, other.owner]
   end
+=end
 end

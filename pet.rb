@@ -33,6 +33,9 @@ class Pet
     elsif attacker.equal?(self)
       puts "#{self} won't hit itself."
       false
+    elsif self.is_a?(Cat) && attacker.is_a?(Dog)
+      puts "#{self} tells #{attacker} to fuck off."
+      false
     else
       @lives -= 1
       puts "#{self} gets attacked by #{attacker}."

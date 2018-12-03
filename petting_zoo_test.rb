@@ -18,11 +18,10 @@ class PettingZooTest < Test::Unit::TestCase
     @person_with_pets = Person.new('Franz')
     @person_without_pets = Person.new('Gert')
 
-    @cat_1 = Cat.new('Horst', Date.new(1932, 12, 7))
-    @cat_2 = Cat.new('Dieter', Date.new(1876, 2, 1))
+    @cat1 = Cat.new('Horst', Date.new(1932, 12, 7))
+    @cat2 = Cat.new('Dieter', Date.new(1876, 2, 1))
     @dead_cat = Cat.new('Hermann', Date.new(1933, 9, 5))
-    @cat_1.add_servant(@person_with_pets)
-    9.times {@cat_1.attack(@dead_cat)}
+    9.times { @cat1.attack(@dead_cat) }
 
     @dog1 = Dog.new('Pete', Date.new(2003, 3, 3), @person_with_pets)
     @dog2 = Dog.new('Quinn', Date.new(2003, 3, 3), @person_with_pets)
@@ -30,17 +29,17 @@ class PettingZooTest < Test::Unit::TestCase
     @dog1.attack(@dead_dog)
   end
 
-  def test_dog_identity
-    assert_false(@dog1 == @dog2)
-    assert_false(@dog1.eql?(@dog2))
-    assert_true(@dog1 == Dog.new('Pete', Date.new(2003, 3, 3), @person_with_pets))
-    assert_true(@dog1.eql?(Dog.new('Pete', Date.new(2003, 3, 3), @person_with_pets)))
-        # pets are not equivalent to dogs
-    assert_false(@dog1 == Pet.new('Pete', Date.new(2003, 3, 3)))
-    assert_false(@dog1.eql?(Pet.new('Pete', Date.new(2003, 3, 3))))
-    assert_false(Pet.new('Pete', Date.new(2003, 3, 3)) == @dog1)
-    assert_false(Pet.new('Pete', Date.new(2003, 3, 3)).eql?(@dog1))
-  end
+  # def test_dog_identity
+  #   assert_false(@dog1 == @dog2)
+  #   assert_false(@dog1.eql?(@dog2))
+  #   assert_true(@dog1 == Dog.new('Pete', Date.new(2003, 3, 3), @person_with_pets))
+  #   assert_true(@dog1.eql?(Dog.new('Pete', Date.new(2003, 3, 3), @person_with_pets)))
+  #       # pets are not equivalent to dogs
+  #   assert_false(@dog1 == Pet.new('Pete', Date.new(2003, 3, 3)))
+  #   assert_false(@dog1.eql?(Pet.new('Pete', Date.new(2003, 3, 3))))
+  #   assert_false(Pet.new('Pete', Date.new(2003, 3, 3)) == @dog1)
+  #   assert_false(Pet.new('Pete', Date.new(2003, 3, 3)).eql?(@dog1))
+  # end
 
   def test_create_new_dogs
     assert_raise(ArgumentError.new('Birthday must be of type Date')) { Dog.new('Name', '1.1.1999', @person_with_pets) }
@@ -58,88 +57,90 @@ class PettingZooTest < Test::Unit::TestCase
 
   def test_dog_attacks
     assert_true(@dog2.alive?)
-        # living dog -> living dog
+    # living dog -> living dog
     assert_true(@dog1.attack(@dog2))
     assert_false(@dog2.alive?)
-        # living dog -> dead dog
+    # living dog -> dead dog
     assert_false(@dog1.attack(@dog2))
-        # living dog -> itself
+    # living dog -> itself
     assert_false(@dog1.attack(@dog1))
-        # living dog -> living cat
-    #assert_true(@cat1.alive?)
-    #assert_false(@dog1.attack(@cat1))
-        # living dog -> person (i.e. non-pet)
+    # living dog -> living cat
+    assert_false(@dog1.attack(@cat1))
+    assert_true(@cat1.alive?)
+    # living dog -> person (i.e. non-pet)
     assert_raise(ArgumentError.new('Only other pets can be attacked.')) {@dog1.attack(@person_with_pets)}
-        # dead dog -> anything
-    assert_raise(DeceasedError) {@dog2.attack(@dog1)}
+    # dead dog -> anything
+    assert_raise(DeceasedError) { @dog2.attack(@dog1) }
   end
 
   def test_cat_attacks
     # living cat -> living cat
-    assert_true(@cat_1.attack(@cat_2))
+    assert_true(@cat1.attack(@cat2))
     # living cat -> dead cat
-    assert_false(@cat_1.attack(@dead_cat))
+    assert_false(@cat1.attack(@dead_cat))
     # living cat -> itself
-    assert_false(@cat_1.attack(@cat_1))
+    assert_false(@cat1.attack(@cat1))
     # living cat -> living dog
-    assert_true(@cat_1.attack(@dog1))
+    assert_true(@cat1.attack(@dog1))
     # living cat -> dead dog
-    assert_false(@cat_1.attack(@dog1))
+    assert_false(@cat1.attack(@dog1))
     # living cat -> person (i.e. non-pet)
-    assert_raise(ArgumentError) { @cat_1.attack(@person_with_pets) }
+    assert_raise(ArgumentError) { @cat1.attack(@person_with_pets) }
     # dead cat -> anything
-    assert_raise(DeceasedError) { @dead_cat.attack(@cat_1) }
+    assert_raise(DeceasedError) { @dead_cat.attack(@cat1) }
   end
 
   def test_person_pets_cat
     # servant -> living cat
-    assert_nil(@person_with_pets.pet_pet(@cat_1))
+    assert_nil(@person_with_pets.pet_pet(@cat1))
     # servant -> dead cat
     assert_false(@person_with_pets.pet_pet(@dead_cat))
     # non-servant -> living cat
-    assert_nil(@person_without_pets.pet_pet(@cat_2))
+    assert_nil(@person_without_pets.pet_pet(@cat2))
     # non-servant -> dead cat
-    assert_nil(@person_without_pets.pet_pet(@cat_1))
+    assert_nil(@person_without_pets.pet_pet(@cat1))
   end
 
   def test_person_feeds_cat
     # servant -> living cat
-    assert_nil(@person_with_pets.feed_pet(@cat_1))
+    assert_nil(@person_with_pets.feed_pet(@cat1))
     # servant -> dead cat
     assert_false(@person_with_pets.feed_pet(@dead_cat))
     # non-servant -> living cat
-    assert_nil(@person_without_pets.feed_pet(@cat_2))
+    assert_nil(@person_without_pets.feed_pet(@cat2))
     # non-servant -> dead cat
     assert_false(@person_without_pets.feed_pet(@dead_cat))
   end
 
   def test_demand_petting
     # living cat -> servant
-    assert_true(@cat_1.demand_petting(@person_with_pets))
+    @cat1.add_servant(@person_with_pets)
+    assert_true(@cat1.demand_petting(@person_with_pets))
     # dead cat -> servant
     assert_raise(DeceasedError) { @dead_cat.demand_petting(@person_with_pets) }
   end
 
   def test_demand_feeding
     # living cat -> servant
-    assert_true(@cat_1.demand_feeding(@person_with_pets))
+    @cat1.add_servant(@person_with_pets)
+    assert_true(@cat1.demand_feeding(@person_with_pets))
     # dead cat -> servant
     assert_raise(DeceasedError) { @dead_cat.demand_feeding(@person_with_pets) }
     # living cat -> non-servant
-    assert_nil(@cat_1.demand_feeding(@person_without_pets))
+    assert_false(@cat1.demand_feeding(@person_without_pets))
     # dead cat -> non-servant
   end
 
   def test_person_pets_dogs
-  assert_false(@dead_dog.alive?)
+    assert_false(@dead_dog.alive?)
     # owner -> living dog
-  assert_true(@person_with_pets.pet_pet(@dog1))
+    assert_true(@person_with_pets.pet_pet(@dog1))
     # owner -> dead dog
-  assert_false(@person_with_pets.pet_pet(@dead_dog))
+    assert_false(@person_with_pets.pet_pet(@dead_dog))
     # non-owner -> living dog
-  assert_true(@person_without_pets.pet_pet(@dog1))
+    assert_true(@person_without_pets.pet_pet(@dog1))
     # non-owner -> dead dog
-  assert_false(@person_without_pets.pet_pet(@dead_dog))
+    assert_false(@person_without_pets.pet_pet(@dead_dog))
   end
 
   def test_person_feeds_dogs
