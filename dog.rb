@@ -5,13 +5,15 @@
 
 require_relative 'pet'
 
-# Class description
+# Inherits from the Pet class.
+# In initialize it is made sure that each dog has an owner.
+# Since dogs apparently can't do stuff it doesn't have any extra methods.
 class Dog < Pet
   attr_reader :owner
   protected :owner
 
   def initialize(name, birthday, owner)
-    raise ArgumentError, 'Owner must be of type Person' unless owner.is_a?(Person)
+    raise PersonError unless owner.is_a?(Person)
 
     super(name, birthday)
     @owner = owner

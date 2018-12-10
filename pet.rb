@@ -4,15 +4,16 @@
 # Author:: Robert Gnehr
 
 require 'date'
-require_relative 'deceased_error'
+require_relative 'exceptions'
 
-# Class description
+# The pet class from which cats and dogs inherit. It handles the attack methods
+# and gives the possibility to check if a Pet is alive.
 class Pet
   attr_reader :name, :birthday, :lives
   protected :name, :birthday, :lives
 
   def initialize(name, birthday)
-    raise ArgumentError, 'Birthday must be of type Date' unless birthday.is_a?(Date)
+    raise BirthdayError unless birthday.is_a?(Date)
 
     @name = name
     @birthday = birthday
@@ -21,7 +22,7 @@ class Pet
 
   def attack(target)
     raise DeceasedError unless alive?
-    raise ArgumentError, 'Only other pets can be attacked.' unless target.is_a?(Pet)
+    raise PetError unless target.is_a?(Pet)
 
     target.get_attacked(self)
 

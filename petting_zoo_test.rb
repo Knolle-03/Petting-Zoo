@@ -8,7 +8,7 @@ require_relative 'dog'
 require_relative 'person'
 require_relative 'cat'
 
-# Class description
+# Several test cases for the petting zoo.
 class PettingZooTest < Test::Unit::TestCase
 
   def setup
@@ -28,8 +28,8 @@ class PettingZooTest < Test::Unit::TestCase
   end
 
   def test_create_new_dogs
-    assert_raise(ArgumentError.new('Birthday must be of type Date')) { Dog.new('Name', '1.1.1999', @person_with_pets) }
-    assert_raise(ArgumentError.new('Owner must be of type Person')) { Dog.new('Name', Date.new(1999, 1, 1), 'Person') }
+    assert_raise(BirthdayError) { Dog.new('Name', '1.1.1999', @person_with_pets) }
+    assert_raise(PersonError) { Dog.new('Name', Date.new(1999, 1, 1), 'Person') }
     assert_nothing_raised {Dog.new('Name', Date.new, Person.new('name')) }
   end
 
@@ -54,7 +54,7 @@ class PettingZooTest < Test::Unit::TestCase
     assert_false(@dog1.attack(@cat1))
     assert_true(@cat1.alive?)
     # living dog -> person (i.e. non-pet)
-    assert_raise(ArgumentError.new('Only other pets can be attacked.')) {@dog1.attack(@person_with_pets)}
+    assert_raise(PetError) { @dog1.attack(@person_with_pets) }
     # dead dog -> anything
     assert_raise(DeceasedError) { @dog2.attack(@dog1) }
   end
@@ -71,7 +71,7 @@ class PettingZooTest < Test::Unit::TestCase
     # living cat -> dead dog
     assert_false(@cat1.attack(@dog1))
     # living cat -> person (i.e. non-pet)
-    assert_raise(ArgumentError) { @cat1.attack(@person_with_pets) }
+    assert_raise(PetError) { @cat1.attack(@person_with_pets) }
     # dead cat -> anything
     assert_raise(DeceasedError) { @dead_cat.attack(@cat1) }
   end

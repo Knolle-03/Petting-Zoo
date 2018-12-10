@@ -3,15 +3,17 @@
 # Author:: Lennart Draeger
 # Author:: Robert Gnehr
 
-require 'set'
 require_relative 'pet'
 require_relative 'person'
 
-# Class description
+# The Cat class inherits from the pet class.
+# Since it is more versatile than a dog, it also has more methods.
+# Firstly the lives of a cat are extended to 9 from 1 in the pet class.
+# Secondly a cat can recruit and dismiss servants
+# from which he demands services.(feeding, petting)
+# Furthermore a cat can list its servants, check if a Person
+# is already a servant and check how many lives it has left in case it lost track.
 class Cat < Pet
-
-
-
   def initialize(name, birthday, *servants)
     super(name, birthday)
     @lives = 9
@@ -31,7 +33,7 @@ class Cat < Pet
   end
 
   def add_servant(servant)
-    raise ArgumentError, 'Argument is not a Person' unless servant.is_a?(Person)
+    raise PersonError unless servant.is_a?(Person)
     raise DeceasedError unless alive?
 
     @servants << servant
@@ -39,7 +41,7 @@ class Cat < Pet
   end
 
   def remove_servant(servant)
-    raise ArgumentError, 'Argument is not a Person' unless servant.is_a?(Person)
+    raise PersonError unless servant.is_a?(Person)
 
     if @servants.include?(servant)
       @servants.delete(servant)
