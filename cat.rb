@@ -10,6 +10,8 @@ require_relative 'person'
 # Class description
 class Cat < Pet
 
+
+
   def initialize(name, birthday, *servants)
     super(name, birthday)
     @lives = 9
@@ -17,38 +19,27 @@ class Cat < Pet
   end
 
   def demand_petting(servant)
-    if alive?
-      if @servants.include?(servant)
-        get_petted(servant)
-        return true
-      else
-        return false
-      end
-    end
-    raise DeceasedError
+    raise DeceasedError unless alive?
+
+    @servants.include?(servant) ? servant.pet_pet(self) : false
   end
 
   def demand_feeding(servant)
-    if alive?
-      if @servants.include?(servant)
-        get_fed(servant)
-        return true
-      else
-        return false
-      end
-    end
-    raise DeceasedError
+    raise DeceasedError unless alive?
+
+    @servants.include?(servant) ? servant.feed_pet(self) : false
   end
 
   def add_servant(servant)
-    raise ArgumentError, 'Argument must be of type person.' unless servant.is_a?(Person)
+    raise ArgumentError, 'Argument is not a Person' unless servant.is_a?(Person)
+    raise DeceasedError unless alive?
 
     @servants << servant
     puts "From now on #{self} demands #{servant}'s services'"
   end
 
   def remove_servant(servant)
-    raise ArgumentError, 'Argument must be of type person.' unless servant.is_a?(Person)
+    raise ArgumentError, 'Argument is not a Person' unless servant.is_a?(Person)
 
     if @servants.include?(servant)
       @servants.delete(servant)
@@ -62,8 +53,7 @@ class Cat < Pet
     @servants.include?(servant)
   end
 
-  def servants_to_s
-    puts "#{self}'s servant#{@servants.length == 1 ? '' : 's'}:"
+  def list_servants
     @servants.to_a.join(', ')
   end
 
@@ -71,3 +61,4 @@ class Cat < Pet
     puts "#{self} has #{@lives} #{@lives == 1 ? 'life' : 'lives'} left."
   end
 end
+

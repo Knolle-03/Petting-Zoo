@@ -16,35 +16,34 @@ class Person
     @pets = Set[]
   end
 
-  def pet_pet(target)
-    raise ArgumentError, 'Argument must be of type Pet.' unless target.is_a?(Pet)
-
-    if target.is_a?(Cat) && target.alive?
-      puts "#{target} tells #{self} to fuck off."
-      return nil
+  def pet_pet(pet)
+    if pet.is_a?(Cat)
+      return false unless pet.servant?(self)
     end
-
-    target.get_petted(self)
+    if pet.alive?
+      puts "#{pet} gets fed by #{self}. Yummy."
+      true
+    else
+      puts "#{pet} won't eat anything. Ever Again."
+      false
+    end
   end
 
-  def feed_pet(target)
-    raise ArgumentError, 'Argument must be of type Pet.' unless target.is_a?(Pet)
-
-    if target.is_a?(Cat) && target.alive?
-      puts "#{target} tells #{self} to fuck off."
-      return nil
+  def feed_pet(pet)
+    if pet.is_a?(Cat)
+      return false unless pet.servant?(self)
     end
-
-    target.get_fed(self)
+    if pet.alive?
+      puts "#{pet} gets petted by #{self} and feels delighted."
+      true
+    else
+      puts "#{pet} gets petted by #{self}, but feels nothing."
+      false
+    end
   end
 
   def add_pet(pet)
-    raise ArgumentError, 'Argument must be of type Pet.' unless pet.is_a?(Pet)
-
-    if pet.is_a?(Cat)
-      puts "#{pet} tells #{self} to fuck off."
-      return nil
-    end
+    raise ArgumentError, 'A cat chooses its servants.' if pet.is_a?(Cat) && pet.alive?
 
     @pets << pet
     self
@@ -54,28 +53,8 @@ class Person
     @name.to_s
   end
 
-  def pets
+  def list_pets
     @pets.to_a.join(', ')
   end
-
-  def ==(other)
-    return false if other.nil?
-    return true if self.equal?(other)
-    return false unless self.class == other.class
-    [@name, @pets] == [other.name, other.pets]
-  end
-
-  def hash
-    prime = 31
-    result = 0
-    result = prime * result + (@name.nil? ? 0 : @name.hash)
-    prime * result + (@pets.nil? ? 0 : @pets.hash)
-  end
-
-  def eql?(other)
-    return false if other.nil?
-    return true if self.equal?(other)
-    return false unless self.class == other.class
-    [@name, @pets] == [other.name, other.pets]
-  end
 end
+
