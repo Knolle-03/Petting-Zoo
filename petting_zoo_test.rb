@@ -143,3 +143,4 @@ class PettingZooTest < Test::Unit::TestCase
     assert_false(@person_without_pets.feed_pet(@dead_dog))
   end
 end
+

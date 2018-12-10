@@ -18,3 +18,4 @@ class Dog < Pet
     @owner.add_pet(self)
   end
 end
+

@@ -61,3 +61,4 @@ class Cat < Pet
     puts "#{self} has #{@lives} #{@lives == 1 ? 'life' : 'lives'} left."
   end
 end
+

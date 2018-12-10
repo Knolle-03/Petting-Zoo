@@ -57,3 +57,4 @@ class Person
     @pets.to_a.join(', ')
   end
 end
+
